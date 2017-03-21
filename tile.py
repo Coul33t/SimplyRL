@@ -1,11 +1,11 @@
 class Tile:
-    def __init__(self, ch, blocked=True, block_sight=True, fgd_color='255,255,255', bkg_color=None):
+    def __init__(self, ch, blocked=True, block_sight=True, fg='255,255,255', bg=None):
         self._ch = ch
         self._explored = False
         self._blocked = blocked
         self._block_sight = block_sight
-        self._fgd_color = fgd_color
-        self._bkg_color = bkg_color
+        self._fg = fg
+        self._bg = bg
 
     def _get_ch(self):
         return self._ch
@@ -39,18 +39,18 @@ class Tile:
 
     block_sight = property(_get_block_sight, _set_block_sight)
 
-    def _get_fgd_color(self):
-        return self._fgd_color
+    def _get_fg(self):
+        return self._fg
 
-    def _set_fgd_color(self, fgd_color):
-        self._fgd_color = fgd_color
+    def _set_fg(self, fg):
+        self._fg = fg
 
-    fgd_color = property(_get_fgd_color, _set_fgd_color)
+    fg = property(_get_fg, _set_fg)
 
-    def _get_bkg_color(self):
-        return self._bkg_color
+    def _get_bg(self):
+        return self._bg
 
-    def _set_bkg_color(self, bkg_color):
-        self._bkg_color = bkg_color
+    def _set_bg(self, bg):
+        self._bg = bg
 
-    bkg_color = property(_get_bkg_color, _set_bkg_color)
+    bg = property(_get_bg, _set_bg)

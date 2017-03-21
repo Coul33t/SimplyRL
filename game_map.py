@@ -8,8 +8,8 @@ import math
 MAP_TILES = {'wall': ' ', 'floor': ' '}
 COLORS = {'wall': '50,50,50', 'floor': '225,225,225'}
 
-MIN_ROOM = 5
-MAX_ROOM = 30
+MIN_ROOM = 2
+MAX_ROOM = 10
 MIN_ROOM_SIZE = 3
 MAX_ROOM_SIZE = 7
 
@@ -17,7 +17,7 @@ class GameMap:
     def __init__(self, width=40, height=20):
         self._width = width
         self._height = height
-        self._map_array = [[Tile(ch=MAP_TILES['wall'], fgd_color=None, bkg_color=COLORS['wall']) for x in range(0,height)] for y in range(0,width)]
+        self._map_array = [[Tile(ch=MAP_TILES['wall'], fg=None, bg=COLORS['wall']) for x in range(height)] for y in range(width)]
         self._rooms = []
 
     def _get_width(self):
@@ -54,41 +54,41 @@ class GameMap:
 
 
     def clear_map(self):
-        self._map_array = [[Tile(ch=MAP_TILES['wall'], fgd_color=None, bkg_color=COLORS['wall']) for x in range(0,self._height)] for y in range(0,self._width)]
+        self._map_array = [[Tile(ch=MAP_TILES['wall'], fg=None, bg=COLORS['wall']) for x in range(0,self._height)] for y in range(0,self._width)]
 
 
     def create_room(self, room):
         for x in range(room.x1, room.x2):
             for y in range(room.y1, room.y2):
                 self._map_array[x][y].ch = MAP_TILES['floor']
-                self._map_array[x][y].bkg_color = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
+                self._map_array[x][y].bg = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
                 self._map_array[x][y].blocked = False
                 self._map_array[x][y].block_sight = False
 
     def carve_h_tunnel(self, x1, x2, y):
         for x in range(min(x1, x2), max(x1, x2) + 1):
             self._map_array[x][y].ch = MAP_TILES['floor']
-            self._map_array[x][y].bkg_color = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
+            self._map_array[x][y].bg = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
             self._map_array[x][y].blocked = False
             self._map_array[x][y].block_sight = False
 
     def carve_v_tunnel(self, y1, y2, x):
         for y in range(min(y1, y2), max(y1, y2) + 1):
             self._map_array[x][y].ch = MAP_TILES['floor']
-            self._map_array[x][y].bkg_color = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
+            self._map_array[x][y].bg = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
             self._map_array[x][y].blocked = False
             self._map_array[x][y].block_sight = False
 
 
-    def create_map(self):
+    def create_map(self, max_room=MAX_ROOM, min_room=MIN_ROOM, min_room_size=MIN_ROOM_SIZE, max_room_size=MAX_ROOM_SIZE):
         num_rooms = 0
 
         self.clear_map()
 
-        while num_rooms < MAX_ROOM:
+        while num_rooms < max_room:
 
-            if num_rooms >= MIN_ROOM:
-                if rn.random() <= (num_rooms - MIN_ROOM)/(MAX_ROOM - MIN_ROOM):
+            if num_rooms >= min_room:
+                if rn.random() <= (num_rooms - min_room)/(max_room - min_room):
                     break
 
             carved = False
@@ -97,8 +97,8 @@ class GameMap:
 
                 carved = True
 
-                w = rn.randint(MIN_ROOM_SIZE, MAX_ROOM_SIZE)
-                h = rn.randint(MIN_ROOM_SIZE, MAX_ROOM_SIZE)
+                w = rn.randint(min_room_size, max_room_size)
+                h = rn.randint(min_room_size, max_room_size)
                 x = rn.randint(1, self._width - w - 1)
                 y = rn.randint(1, self._height - h - 1)
 
