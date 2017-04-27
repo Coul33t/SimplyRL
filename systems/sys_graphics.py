@@ -1,8 +1,11 @@
-from system import *
+from components.graphics import Graphics
 
-class Graphics(System):
+class SysGraphics:
     def __init__(self):
-        pass
+        self.component_list = {}
 
-    def update(self, comp):
+    def create_component(self, entity, **params):
+        self.component_list[entity] = Graphics(**params)
+
+    def update(self):
         pass
