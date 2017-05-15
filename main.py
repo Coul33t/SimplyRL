@@ -7,16 +7,17 @@ CHAR_TO_DRAW = {'w': ' ', 'f': ' '}
 COLORS = {'w': '100,100,100', 'f': '150,150,150'}
 
 
-
+#TODO: check relevance of mutators in classes
 
 def main():
     engine = Engine()
 
-    engine.init()
+    #engine.init()
 
-    while terminal.read() != terminal.TK_CLOSE:
-        engine.draw()
-        engine.handling_keys()
+    while True:
+        engine.update()
+        #engine.draw()
+        #engine.handling_keys()
         terminal.refresh()
 
     terminal.close()

@@ -1,11 +1,14 @@
 from components.position import Position
+from systems.sys_template import *
 
-class SysPosition:
+class SysPosition(SysTemplate):
     def __init__(self):
-        self._component_list = {}
+        super().__init__()
 
     def create_component(self, entity, **params):
         self._component_list[entity] = Position(**params)
 
-    def update(self):
-        pass
+    def move(self, entity, **delta):
+        if entity in self._component_list:
+            self._component_list[entity].x += delta.x
+            self._component_list[entity].y += delta.y
