@@ -1,23 +1,12 @@
-import pdb
 import random as rn
 
 from engine import *
 
-CHAR_TO_DRAW = {'w': ' ', 'f': ' '}
-COLORS = {'w': '100,100,100', 'f': '150,150,150'}
-
-
-#TODO: check relevance of mutators in classes
-
 def main():
     engine = Engine()
 
-    #engine.init()
-
-    while True:
+    while engine.game_state is not 'exit':
         engine.update()
-        #engine.draw()
-        #engine.handling_keys()
         terminal.refresh()
 
     terminal.close()

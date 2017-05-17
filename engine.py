@@ -31,13 +31,13 @@ class Engine:
         self._objects = []
         self._visible_tiles = []
 
-        self._game_state = 'main_menu'
+        self.game_state = 'main_menu'
 
         self.init_terminal()
 
         self._entities_manager = EntityManager()
 
-        self._entities_manager.subscribe_system(SysInput(terminal), 'Input')
+        self._entities_manager.subscribe_system(SysInput(terminal, self), 'Input')
         self._entities_manager.subscribe_system(SysPosition(), 'Position')
         self._entities_manager.subscribe_system(SysEvent(), 'Event')
         self._entities_manager.subscribe_system(SysRender(terminal, self._game_map), 'Graphics')
@@ -51,24 +51,9 @@ class Engine:
 
         self.init_fov()
 
-        self._game_state = 'playing'
-
         self._entities_manager.associate_tag(self._player, 'player')
 
-
-    def init(self):
-        self.init_terminal()
-
-        self._entities_manager.subscribe_system()
-
-        (x_player, y_player) = self._game_map.create_map()
-        self._entities_manager.add_component(self._player, 'Position', x=x_player, y=y_player)
-        self._entities_manager.add_component(self._player, 'Graphics', ch='@', fg='red', bg=None)
-
-        self.init_fov()
-
-        self._game_state = 'playing'
-
+        self.game_state = 'playing'
 
     def init_fov(self):
         self._fov_recompute = True
@@ -85,12 +70,6 @@ class Engine:
         terminal.set("font: res/fonts/VeraMono.ttf, size=20x40")
         terminal.composition(True)
         terminal.refresh()
-
-
-    def handling_keys(self):
-        key = terminal.read()
-
-        terminal.puts(10,10, '[color=orange]{}[/color]'.format(key))
 
 
     def is_blocked(self, x, y):
@@ -155,5 +134,5 @@ class Engine:
 
     def update(self):
         for sys in self._entities_manager._systems_dict:
-            print("{} system called".format(sys))
+            #print("{} system called".format(sys))
             self._entities_manager._systems_dict[sys].update()
