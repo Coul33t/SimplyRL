@@ -1,50 +1,51 @@
 from components.graphics import Graphics
 from systems.sys_template import *
 
+import pdb
+
 class SysRender(SysTemplate):
-    def __init__(self, terminal, game_map):
-        self._component_list = OrderedDict()
-        self._game_map = game_map
+    def __init__(self, terminal):
+        super().__init__()
         self._terminal = terminal
-        self._entity_manager = None
+
 
     def create_component(self, entity, **params):
-        self._component_list[entity] = Graphics(**params)
-
-    def set_ref_to_entity_manager(self, manager):
-        self._entity_manager = manager
+        self.component_list[entity] = Graphics(**params)
 
     def update(self):
         # Display reset
+        game_map = self.entity_manager.get_system('Map').game_map
+
         self._terminal.bkcolor('black')
         self._terminal.clear()
 
         # Map drawing
         self._terminal.layer(0)
 
-        for i in range(0, self._game_map.width):
-            for j in range(0, self._game_map.height):
-                self._terminal.color(self._game_map.map_array[i][j].fg)
-                self._terminal.bkcolor(self._game_map.map_array[i][j].bg)
-                self._terminal.puts(i, j, self._game_map.map_array[i][j].ch)
+        for i in range(0, game_map.width):
+            for j in range(0, game_map.height):
+                if (i, j) in self.entity_manager.get_system('Map').visible_tiles:
+                    self._terminal.color(game_map.map_array[i][j].fg)
+                    self._terminal.bkcolor(game_map.map_array[i][j].bg)
+                    self._terminal.puts(i, j, game_map.map_array[i][j].ch)
 
         # Entities drawing
         self._terminal.layer(1)
 
         # Code readability
-        manager = self._entity_manager
+        manager = self.entity_manager
 
         # For every entity which has a Render component
-        for elem in self._component_list:
+        for elem in self.component_list:
 
-            if self._component_list[elem].fg:
-                self._terminal.color(self._component_list[elem].fg)
+            if self.component_list[elem].fg:
+                self._terminal.color(self.component_list[elem].fg)
 
-            if self._component_list[elem].bg:
-                self._terminal.bkcolor(self._component_list[elem].bg)
+            if self.component_list[elem].bg:
+                self._terminal.bkcolor(self.component_list[elem].bg)
 
             # Code readability
-            x = manager.get_system('Position').get_component(elem).x
-            y = manager.get_system('Position').get_component(elem).y
+            x = manager.get_system('Physics').get_component(elem).x
+            y = manager.get_system('Physics').get_component(elem).y
 
-            self._terminal.print(x, y, self._component_list[elem].ch)
+            self._terminal.print(x, y, self.component_list[elem].ch)
