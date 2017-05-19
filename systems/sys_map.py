@@ -70,22 +70,15 @@ class SysMap(SysTemplate):
 
 
     def compute_visible_tiles(self):
-
         self.visible_tiles = []
 
         player = self.entity_manager.get_system('Physics').get_component(self.entity_manager.get_entity_by_tag('Player'))
-
-        for x, y in self._fov_map:
-            if self._fov_map.transparent[x, y] == True:
-                print(self._fov_map.transparent[x, y])
-
 
         visible_tiles_iter = self._fov_map.compute_fov(player.x, player.y, radius=TORCH_RADIUS, light_walls=FOV_LIGHT_WALLS)
 
         for tile in visible_tiles_iter:
             self.visible_tiles.append(tile)
 
-        print(self.visible_tiles)
 
     def update(self):
         self.compute_visible_tiles()

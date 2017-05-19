@@ -11,6 +11,17 @@ class SysRender(SysTemplate):
     def create_component(self, entity, **params):
         self.component_list[entity] = Graphics(**params)
 
+    def _attenuate_color(self, color, ratio):
+        if color:
+            color = color.split(',')
+            new_color = ''
+            for channel in color:
+                new_color += str(float(channel)*ratio) + ','
+
+            return new_color[0:-1]
+
+        return color
+
     def update(self):
         # Display reset
         self._terminal.bkcolor('black')
@@ -23,14 +34,16 @@ class SysRender(SysTemplate):
 
         for x in range(0, game_map.width):
             for y in range(0, game_map.height):
+
                 if (x, y) in self.entity_manager.get_system('Map').visible_tiles:
-                    game_map[x][y].explored = True
+                    game_map.map_array[x][y].explored = True
                     self._terminal.color(game_map.map_array[x][y].fg)
                     self._terminal.bkcolor(game_map.map_array[x][y].bg)
                     self._terminal.puts(x, y, game_map.map_array[x][y].ch)
-                elif game_map[x][y].explored:
-                    self._terminal.color(game_map.map_array[x][y].fg)
-                    self._terminal.bkcolor(game_map.map_array[x][y].bg)
+
+                elif game_map.map_array[x][y].explored:
+                    self._terminal.color(self._attenuate_color(game_map.map_array[x][y].fg, 0.25))
+                    self._terminal.bkcolor(self._attenuate_color(game_map.map_array[x][y].bg, 0.25))
                     self._terminal.puts(x, y, game_map.map_array[x][y].ch)
 
         # Entities drawing
