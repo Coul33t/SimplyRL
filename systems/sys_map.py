@@ -12,6 +12,8 @@ FOV_ALGO = 0
 FOV_LIGHT_WALLS = True
 TORCH_RADIUS = 20
 
+#TODO: Merge sys_map.py with game_map.py
+
 class SysMap(SysTemplate):
     def __init__(self):
         self.game_map = GameMap(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
@@ -23,7 +25,9 @@ class SysMap(SysTemplate):
         self._current_map_level = 1
         self.visible_tiles = []
 
-        self.init_fov()
+
+    def new_map(self):
+        return self.game_map.create_map()
 
     def init_fov(self):
         self._fov_recompute = True
@@ -33,6 +37,7 @@ class SysMap(SysTemplate):
             self._fov_map.walkable[x, y] = not self.game_map.map_array[x][y].blocked
 
 
+
     def is_blocked(self, x, y):
         if self.game_map.is_blocked(x, y):
             return True
@@ -40,7 +45,9 @@ class SysMap(SysTemplate):
         sys_physics = self.entity_manager.get_system('Physics')
 
         for entity in sys_physics.component_list:
-            if sys_physics.get_component(entity).blocks and sys_physics.get_component(entity).x == x and sys_physics.get_component(entity).y == y:
+            e = sys_physics.get_component(entity)
+
+            if e.blocks and e.x == x and e.y == y:
                 return True
 
         return False
@@ -52,8 +59,11 @@ class SysMap(SysTemplate):
 
         else:
             sys_physics = self.entity_manager.get_system('Physics')
+
             for entity in sys_physics.component_list:
-                if sys_physics.get_component(entity).blocks and sys_physics.get_component(entity).x == x and sys_physics.get_component(entity).y == y:
+                e = sys_physics.get_component(entity)
+
+                if e.blocks and e.x == x and e.y == y:
                     return 10
 
         return 1
@@ -63,10 +73,14 @@ class SysMap(SysTemplate):
 
         self.visible_tiles = []
 
-        player = self.entity_manager.get_entity_by_tag('player')
-        sys_position = self.entity_manager.get_system('Physics')
+        player = self.entity_manager.get_system('Physics').get_component(self.entity_manager.get_entity_by_tag('Player'))
 
-        visible_tiles_iter = self._fov_map.compute_fov(sys_position.get_component(player).x, sys_position.get_component(player).y, radius=TORCH_RADIUS, light_walls=FOV_LIGHT_WALLS)
+        for x, y in self._fov_map:
+            if self._fov_map.transparent[x, y] == True:
+                print(self._fov_map.transparent[x, y])
+
+
+        visible_tiles_iter = self._fov_map.compute_fov(player.x, player.y, radius=TORCH_RADIUS, light_walls=FOV_LIGHT_WALLS)
 
         for tile in visible_tiles_iter:
             self.visible_tiles.append(tile)

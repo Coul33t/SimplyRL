@@ -17,5 +17,5 @@ class SysInput(SysTemplate):
             self._engine.game_state = 'exit'
 
         if key in MOVEMENT_KEYS:
-            self.entity_manager.get_system('Event').add_event(('Physics', 'move', self.entity_manager.get_entity_by_tag('player'), MOVEMENT_KEYS[key]))
+            self.entity_manager.get_system('Event').add_event(('Physics', 'move', self.entity_manager.get_entity_by_tag('Player'), MOVEMENT_KEYS[key]))
         #self._terminal.puts(10,10, '[color=orange]{}[/color]'.format(key))

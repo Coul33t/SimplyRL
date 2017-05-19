@@ -26,14 +26,15 @@ class Engine:
         self._entities_manager.subscribe_system(SysMap(), 'Map')
         self._entities_manager.subscribe_system(SysRender(terminal), 'Graphics')
 
-        (x_player, y_player) = self._entities_manager.get_system('Map').game_map.create_map()
+        (x_player, y_player) = self._entities_manager.get_system('Map').new_map()
+        self._entities_manager.get_system('Map').init_fov()
 
         self._player = self._entities_manager.create_entity()
 
         self._entities_manager.add_component(self._player, 'Physics', x=x_player, y=y_player, blocks_sight=False)
         self._entities_manager.add_component(self._player, 'Graphics', ch='@', fg='red', bg=None)
 
-        self._entities_manager.associate_tag(self._player, 'player')
+        self._entities_manager.associate_tag(self._player, 'Player')
 
         self.game_state = 'playing'
 
@@ -47,12 +48,5 @@ class Engine:
         terminal.refresh()
 
 
-    def send_to_back(self, entity):
-        self._entities.remove(entity)
-        self._entities.insert(0, entity)
-
-
     def update(self):
-        for sys in self._entities_manager._systems_dict:
-            #print("{} system called".format(sys))
-            self._entities_manager._systems_dict[sys].update()
+        self._entities_manager.update()

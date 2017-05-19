@@ -40,7 +40,7 @@ class GameMap:
         else:
             return True
 
-            
+
 
     def is_blocked(self, x, y):
         if self.map_array[x][y].blocked:
