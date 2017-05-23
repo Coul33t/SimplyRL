@@ -4,3 +4,4 @@ class Graphics(object):
         self.fg = fg
         self.bg = bg
         self.always_visible = always_visible
+        self.last_seen = [None, None]

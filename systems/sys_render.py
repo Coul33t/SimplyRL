@@ -11,6 +11,14 @@ class SysRender(SysTemplate):
     def create_component(self, entity, **params):
         self.component_list[entity] = Graphics(**params)
 
+    '''
+        Used to attenuate a color by a ratio (between 0 and 1).
+        Input :
+                color : a rgb color, as a string (e.g. : '255,255,0')
+                ratio : the ratio (e.g. : 0.5)
+        Output :
+                the modified color, as a string (e.g. : '127,127,0')
+    '''
     def _attenuate_color(self, color, ratio):
         if color:
             color = color.split(',')
@@ -51,15 +59,24 @@ class SysRender(SysTemplate):
 
         # For every entity which has a Render component
         for elem in self.component_list:
+            e = self.entity_manager.get_system('Physics').get_component(elem)
 
-            if self.component_list[elem].fg:
-                self._terminal.color(self.component_list[elem].fg)
+            if (e.x, e.y) in self.entity_manager.get_system('Map').visible_tiles:
+                self.component_list[elem].last_seen = [e.x, e.y]
 
-            if self.component_list[elem].bg:
-                self._terminal.bkcolor(self.component_list[elem].bg)
+                if self.component_list[elem].fg:
+                    self._terminal.color(self.component_list[elem].fg)
 
-            # Code readability
-            x = self.entity_manager.get_system('Physics').get_component(elem).x
-            y = self.entity_manager.get_system('Physics').get_component(elem).y
+                if self.component_list[elem].bg:
+                    self._terminal.bkcolor(self.component_list[elem].bg)
 
-            self._terminal.print(x, y, self.component_list[elem].ch)
+                self._terminal.print(e.x, e.y, self.component_list[elem].ch)
+
+            elif not None in self.component_list[elem].last_seen:
+                if self.component_list[elem].fg:
+                    self._terminal.color('darker ' + self.component_list[elem].fg)
+
+                if self.component_list[elem].bg:
+                    self._terminal.bkcolor('darker ' + self.component_list[elem].bg, 0.25)
+
+                self._terminal.print(e.x, e.y, self.component_list[elem].ch)

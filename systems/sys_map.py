@@ -1,5 +1,7 @@
 import tdl
 
+import random as rn
+
 from systems.sys_template import *
 from game_map import *
 
@@ -27,7 +29,9 @@ class SysMap(SysTemplate):
 
 
     def new_map(self):
-        return self.game_map.create_map()
+        coordinates = self.game_map.create_map()
+        self.populate_dungeon()
+        return coordinates
 
     def init_fov(self):
         self._fov_recompute = True
@@ -36,6 +40,22 @@ class SysMap(SysTemplate):
             self._fov_map.transparent[x, y] = not self.game_map.map_array[x][y].block_sight
             self._fov_map.walkable[x, y] = not self.game_map.map_array[x][y].blocked
 
+
+    def create_monster(self, x, y, ch='X', fg='green', bg=None):
+        monster = self.entity_manager.create_entity()
+        self.entity_manager.add_component(monster, 'Physics', x=x, y=y, blocks_sight=False)
+        self.entity_manager.add_component(monster, 'Graphics', ch=ch, fg=fg, bg=bg)
+
+
+    def populate_dungeon(self):
+        for i in range(len(self.game_map.rooms)):
+            nb = rn.randint(0,2)
+
+            for _ in range(nb):
+                x = rn.randint(self.game_map.rooms[i].x1+1, self.game_map.rooms[i].x2-1)
+                y = rn.randint(self.game_map.rooms[i].y1+1, self.game_map.rooms[i].y2-1)
+
+                self.create_monster(x, y)
 
 
     def is_blocked(self, x, y):
