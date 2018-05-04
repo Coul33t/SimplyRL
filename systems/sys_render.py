@@ -24,7 +24,7 @@ class SysRender(SysTemplate):
             color = color.split(',')
             new_color = ''
             for channel in color:
-                new_color += str(float(channel)*ratio) + ','
+                new_color += str(int(float(channel)*ratio)) + ','
 
             return new_color[0:-1]
 
@@ -80,3 +80,15 @@ class SysRender(SysTemplate):
                     self._terminal.bkcolor('darker ' + self.component_list[elem].bg, 0.25)
 
                 self._terminal.print(e.x, e.y, self.component_list[elem].ch)
+
+        # Message drawing
+        messages = self.entity_manager.get_system('Messages').return_msg(5)
+        if messages:
+            y = 19
+            for i,msg in enumerate(messages):
+                fg_col = self._attenuate_color(msg.fg_colour, 1-(i/5))
+                bg_col = self._attenuate_color(msg.bg_colour, 1-(i/5))
+                self._terminal.print(0, y, f'[color=({fg_col})][bkcolor=({bg_col})]{msg.txt}[/bkcolor][/color]')
+                print(f'[color=({fg_col})][bkcolor=({bg_col})]{msg.txt}[/bkcolor][/color]')
+                y -= 1
+
