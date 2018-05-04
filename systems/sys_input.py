@@ -7,6 +7,7 @@ QUIT_KEY = (41, 224)
 
 class SysInput(SysTemplate):
     def __init__(self, terminal=None, engine=None):
+        super().__init__()
         self._terminal = terminal
         self._engine = engine
 

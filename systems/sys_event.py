@@ -3,6 +3,7 @@ import pdb
 
 class SysEvent(SysTemplate):
     def __init__(self):
+        super().__init__()
         self._event_queue = []
 
     # An event is : a system, a function, an entity, a value

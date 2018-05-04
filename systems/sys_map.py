@@ -18,6 +18,8 @@ TORCH_RADIUS = 20
 
 class SysMap(SysTemplate):
     def __init__(self):
+        super().__init__()
+        
         self.game_map = GameMap(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
         self._fov_map = tdl.map.Map(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
         self._fov_recompute = True
@@ -45,6 +47,9 @@ class SysMap(SysTemplate):
         monster = self.entity_manager.create_entity()
         self.entity_manager.add_component(monster, 'Physics', x=x, y=y, blocks_sight=False)
         self.entity_manager.add_component(monster, 'Graphics', ch=ch, fg=fg, bg=bg)
+        self.entity_manager.add_component(monster, 'Stats', hp=10)
+        self.entity_manager.add_component(monster, 'Ai')
+        self.entity_manager.add_component(monster, 'Interactions', can_be_interacted=['attack'])
 
 
     def populate_dungeon(self):
