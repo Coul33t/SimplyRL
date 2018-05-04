@@ -8,8 +8,12 @@ from tags_manager import *
 
 from systems.sys_input import *
 from systems.sys_physics import *
+from systems.sys_interactions import *
+from systems.sys_stats import *
+from systems.sys_ai import *
 from systems.sys_map import *
 from systems.sys_event import *
+from systems.sys_messages import *
 from systems.sys_render import *
 
 class Engine:
@@ -22,8 +26,12 @@ class Engine:
 
         self._entities_manager.subscribe_system(SysInput(terminal, self), 'Input')
         self._entities_manager.subscribe_system(SysPhysics(), 'Physics')
-        self._entities_manager.subscribe_system(SysEvent(), 'Event')
+        self._entities_manager.subscribe_system(SysInteractions(), 'Interactions')
+        self._entities_manager.subscribe_system(SysStats(), 'Stats')
+        self._entities_manager.subscribe_system(SysAi(), 'Ai')
         self._entities_manager.subscribe_system(SysMap(), 'Map')
+        self._entities_manager.subscribe_system(SysEvent(), 'Event')
+        self._entities_manager.subscribe_system(SysMessages(), 'Messages')
         self._entities_manager.subscribe_system(SysRender(terminal), 'Graphics')
 
         (x_player, y_player) = self._entities_manager.get_system('Map').new_map()
@@ -33,6 +41,10 @@ class Engine:
 
         self._entities_manager.add_component(self._player, 'Physics', x=x_player, y=y_player, blocks_sight=False)
         self._entities_manager.add_component(self._player, 'Graphics', ch='@', fg='red', bg=None)
+        self._entities_manager.add_component(self._player, 'Stats', melee_dmg=10)
+        self._entities_manager.add_component(self._player, 'Interactions', can_do=['attack'])
+
+        self._entities_manager.add_component(self, 'Messages', txt='You wake up in a dark lab...', colour='black')
 
         self._entities_manager.associate_tag(self._player, 'Player')
 
