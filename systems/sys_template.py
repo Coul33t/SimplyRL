@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import pdb
 
 class SysTemplate:
     def __init__(self):
@@ -8,7 +9,12 @@ class SysTemplate:
         self.entity_manager = None
 
     def create_component(self, entity, **params):
-        print('Component creation not implemented for the current system ({}).'.format(self.__class__.__name__))
+        pass
+        #print('Component creation not implemented for the current system ({}).'.format(self.__class__.__name__))
+
+    def delete_component(self, comp_id):
+        if comp_id in self.component_list:
+            del self.component_list[comp_id]
 
     def get_component(self, comp_id):
         if comp_id in self.component_list:
@@ -18,4 +24,5 @@ class SysTemplate:
         self.entity_manager = manager
 
     def update(self):
-        print('Update function not implemented for the current system ({}).'.format(self.__class__.__name__))
+        pass
+        #print('Update function not implemented for the current system ({}).'.format(self.__class__.__name__))
