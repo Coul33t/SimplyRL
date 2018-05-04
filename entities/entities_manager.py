@@ -13,6 +13,12 @@ class EntityManager:
         self._entities_list.append(uuid.uuid4())
         return self._entities_list[-1]
 
+    def delete_entity(self, entity):
+        if entity in self._entities_list:
+            for sys in self._systems_dict:
+                self._systems_dict[sys].delete_component(entity)
+            self._entities_list.remove(entity)
+
     def subscribe_system(self, system, name):
         self._systems_dict[name] = system
         system.set_ref_to_entity_manager(self)
