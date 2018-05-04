@@ -138,3 +138,8 @@ class GameMap:
             num_rooms += 1
 
         return return_coordinates
+
+    def create_map_2(self, max_room=MAX_ROOM, min_room=MIN_ROOM, min_room_size=MIN_ROOM_SIZE, max_room_size=MAX_ROOM_SIZE):
+        num_rooms = 0
+
+        self.clear_map()
