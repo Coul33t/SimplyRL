@@ -12,10 +12,10 @@ class SysMessages(SysTemplate):
     def create_component(self, entity, **params):
         if 'fg_colour' not in params or params['fg_colour'] == 'default':
             #params['fg_colour'] = ENTITIY_DEFAULT_FG_COLOURS[entity]
-            params['fg_colour'] = '0,255,0'
+            params['fg_colour'] = '255,255,255'
         if 'bg_colour' not in params or params['bg_colour'] == 'default':
             #params['bg_colour'] = ENTITIY_DEFAULT_BG_COLOURS[entity]
-            params['bg_colour'] = '150,0,150'
+            params['bg_colour'] = '0,0,0'
 
         self.component_list[entity] = Message(**params)
         self._message_history.append(Message(**params))

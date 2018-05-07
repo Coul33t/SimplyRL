@@ -19,16 +19,16 @@ class SysRender(SysTemplate):
         Output :
                 the modified color, as a string (e.g. : '127,127,0')
     '''
-    def _attenuate_color(self, color, ratio):
-        if color:
-            color = color.split(',')
-            new_color = ''
-            for channel in color:
-                new_color += str(int(float(channel)*ratio)) + ','
+    def _attenuate_color(self, colour, ratio):
+        if colour:
+            colour = colour.split(',')
+            new_colour = ''
+            for channel in colour:
+                new_colour += str(int(float(channel)*ratio)) + ','
 
-            return new_color[0:-1]
+            return new_colour[0:-1]
 
-        return color
+        return colour
 
     def update(self):
         # Display reset
@@ -81,14 +81,17 @@ class SysRender(SysTemplate):
 
                 self._terminal.print(e.x, e.y, self.component_list[elem].ch)
 
+
         # Message drawing
+        self._terminal.layer(0)
         messages = self.entity_manager.get_system('Messages').return_msg(5)
         if messages:
             y = 19
             for i,msg in enumerate(messages):
                 fg_col = self._attenuate_color(msg.fg_colour, 1-(i/5))
                 bg_col = self._attenuate_color(msg.bg_colour, 1-(i/5))
-                self._terminal.print(0, y, f'[color=({fg_col})][bkcolor=({bg_col})]{msg.txt}[/bkcolor][/color]')
-                print(f'[color=({fg_col})][bkcolor=({bg_col})]{msg.txt}[/bkcolor][/color]')
+                self._terminal.color(fg_col)
+                self._terminal.bkcolor(bg_col)
+                self._terminal.print(0, y, f'{msg.txt}')
                 y -= 1
 

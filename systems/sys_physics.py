@@ -19,34 +19,38 @@ class SysPhysics(SysTemplate):
         return None
 
     def move(self, entity, delta):
-        if entity in self.component_list:
+        if entity not in self.component_list:
+            return
 
-            new_x = self.component_list[entity].x + delta[0]
-            new_y = self.component_list[entity].y + delta[1]
+        new_x = self.component_list[entity].x + delta[0]
+        new_y = self.component_list[entity].y + delta[1]
 
-            # There is nothing blocking the path
-            if not self.entity_manager.get_system('Map').is_blocked(new_x, new_y):
-                self.component_list[entity].x = new_x
-                self.component_list[entity].y = new_y
-                self.entity_manager.add_component(entity, 'Messages',txt='Move')
+        # There is nothing blocking the path
+        if not self.entity_manager.get_system('Map').is_blocked(new_x, new_y):
+            self.component_list[entity].x = new_x
+            self.component_list[entity].y = new_y
 
-            # There is something blocking the path
-            else:
-                # If it's an actual entity
-                target = self.get_entity_from_coordinates(new_x, new_y)
+        # There is something blocking the path
+        else:
+            # If it's an actual entity
+            target = self.get_entity_from_coordinates(new_x, new_y)
 
-                if target is not None:
-                    # If the target can be interacted with
-                    if self.entity_manager.get_system('Interactions').get_component(target):
+            if target is None:
+                return
 
-                        # If the target has stats
-                        if self.entity_manager.get_system('Stats').get_component(target):
+            # If the target can be interacted with and has stats and can be attacked
+            if self.entity_manager.get_system('Interactions').get_component(target) and\
+               self.entity_manager.get_system('Stats').get_component(target) and\
+               'attack' in self.entity_manager.get_system('Interactions').get_component(target).can_be_interacted:
 
-                            # If it can be attacked
-                            if 'attack' in self.entity_manager.get_system('Interactions').get_component(target).can_be_interacted:
-                                # We attack it
-                                self.entity_manager.get_system('Interactions').melee_attack(entity, target)
-                                self.entity_manager.add_component(entity, 'Messages',txt='Attack')
+                e_name = self.entity_manager.get_system('Graphics').get_component(entity).name
+                t_name = self.entity_manager.get_system('Graphics').get_component(target).name
+                msg = f'{e_name} attacks {t_name}'
+                if e_name == 'You':
+                    msg = f'{e_name} attack the {t_name}'
+                # We attack it
+                self.entity_manager.get_system('Interactions').melee_attack(entity, target)
+                self.entity_manager.add_component(entity, 'Messages', txt=msg, fg_colour='255,150,150', bg_colour='0,0,0')
 
 
 
