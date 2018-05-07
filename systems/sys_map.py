@@ -12,14 +12,13 @@ DUNGEON_DISPLAY_HEIGHT = 15
 
 FOV_ALGO = 0
 FOV_LIGHT_WALLS = True
-TORCH_RADIUS = 20
 
 #TODO: Merge sys_map.py with game_map.py
 
 class SysMap(SysTemplate):
     def __init__(self):
         super().__init__()
-        
+
         self.game_map = GameMap(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
         self._fov_map = tdl.map.Map(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
         self._fov_recompute = True
@@ -46,7 +45,7 @@ class SysMap(SysTemplate):
     def create_monster(self, x, y, ch='X', fg='green', bg=None):
         monster = self.entity_manager.create_entity()
         self.entity_manager.add_component(monster, 'Physics', x=x, y=y, blocks_sight=False)
-        self.entity_manager.add_component(monster, 'Graphics', ch=ch, fg=fg, bg=bg)
+        self.entity_manager.add_component(monster, 'Graphics', name='Basic Monster', ch=ch, fg=fg, bg=bg)
         self.entity_manager.add_component(monster, 'Stats', hp=10)
         self.entity_manager.add_component(monster, 'Ai')
         self.entity_manager.add_component(monster, 'Interactions', can_be_interacted=['attack'])
@@ -97,9 +96,10 @@ class SysMap(SysTemplate):
     def compute_visible_tiles(self):
         self.visible_tiles = []
 
-        player = self.entity_manager.get_system('Physics').get_component(self.entity_manager.get_entity_by_tag('Player'))
+        p_phys = self.entity_manager.get_system('Physics').get_component(self.entity_manager.get_entity_by_tag('Player'))
+        p_vis = self.entity_manager.get_system('Stats').get_component(self.entity_manager.get_entity_by_tag('Player')).vision_range
 
-        visible_tiles_iter = self._fov_map.compute_fov(player.x, player.y, radius=TORCH_RADIUS, light_walls=FOV_LIGHT_WALLS)
+        visible_tiles_iter = self._fov_map.compute_fov(p_phys.x, p_phys.y, radius=p_vis, light_walls=FOV_LIGHT_WALLS)
 
         for tile in visible_tiles_iter:
             self.visible_tiles.append(tile)
