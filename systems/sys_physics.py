@@ -29,6 +29,7 @@ class SysPhysics(SysTemplate):
         if not self.entity_manager.get_system('Map').is_blocked(new_x, new_y):
             self.component_list[entity].x = new_x
             self.component_list[entity].y = new_y
+            self.entity_manager.add_component(entity, 'Messages', txt='')
 
         # There is something blocking the path
         else:
