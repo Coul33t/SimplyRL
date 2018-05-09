@@ -1,7 +1,13 @@
 from components.graphics import Graphics
 from systems.sys_template import *
 
+from constants import (MESSAGE_SIZE_X,
+                       MESSAGE_SIZE_Y,
+                       CONSOLE_SIZE_Y)
 import pdb
+
+DEFAULT_MSG_BG_COLOUR = '0,0,0'
+DEFAULT_MSG_FG_COLOUR = '255,255,255'
 
 class SysRender(SysTemplate):
     def __init__(self, terminal):
@@ -84,14 +90,28 @@ class SysRender(SysTemplate):
 
         # Message drawing
         self._terminal.layer(0)
-        messages = self.entity_manager.get_system('Messages').return_msg(5)
+        self._terminal.bkcolor(DEFAULT_MSG_BG_COLOUR)
+        for x in range(0, MESSAGE_SIZE_X):
+            for y in range(CONSOLE_SIZE_Y - MESSAGE_SIZE_Y, CONSOLE_SIZE_Y):
+                self._terminal.puts(x, y, ' ')
+
+        messages = self.entity_manager.get_system('Messages').return_msg(MESSAGE_SIZE_Y)
         if messages:
-            y = 19
+            y = CONSOLE_SIZE_Y - 1
             for i,msg in enumerate(messages):
-                fg_col = self._attenuate_color(msg.fg_colour, 1-(i/5))
-                bg_col = self._attenuate_color(msg.bg_colour, 1-(i/5))
+
+                fg_col = DEFAULT_MSG_FG_COLOUR
+                if  msg.fg_colour:
+                    fg_col = self._attenuate_color(msg.fg_colour, 1-(i/MESSAGE_SIZE_Y))
+
                 self._terminal.color(fg_col)
+
+                bg_col = DEFAULT_MSG_BG_COLOUR
+                if msg.bg_colour:
+                    bg_col = self._attenuate_color(msg.bg_colour, 1-(i/MESSAGE_SIZE_Y))
+
                 self._terminal.bkcolor(bg_col)
+
                 self._terminal.print(0, y, f'{msg.txt}')
                 y -= 1
 
