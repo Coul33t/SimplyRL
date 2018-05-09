@@ -5,10 +5,10 @@ import random as rn
 from systems.sys_template import *
 from game_map import *
 
-import pdb
+from constants import (DUNGEON_DISPLAY_WIDTH,
+                       DUNGEON_DISPLAY_HEIGHT)
 
-DUNGEON_DISPLAY_WIDTH = 50
-DUNGEON_DISPLAY_HEIGHT = 15
+import pdb
 
 FOV_ALGO = 0
 FOV_LIGHT_WALLS = True
