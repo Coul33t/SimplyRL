@@ -1,20 +1,20 @@
 from bearlibterminal import terminal
-import tdl
 
-import pdb
+from constants import (CONSOLE_SIZE_X,
+                       CONSOLE_SIZE_Y)
 
 from entities.entities_manager import *
 from tags_manager import *
 
-from systems.sys_input import *
-from systems.sys_physics import *
-from systems.sys_interactions import *
-from systems.sys_stats import *
-from systems.sys_ai import *
-from systems.sys_map import *
-from systems.sys_event import *
-from systems.sys_messages import *
-from systems.sys_render import *
+from systems.sys_input import SysInput
+from systems.sys_physics import SysPhysics
+from systems.sys_interactions import SysInteractions
+from systems.sys_stats import SysStats
+from systems.sys_ai import SysAi
+from systems.sys_map import SysMap
+from systems.sys_event import SysEvent
+from systems.sys_messages import SysMessages
+from systems.sys_render import SysRender
 
 class Engine:
     def __init__(self):
@@ -45,7 +45,7 @@ class Engine:
         self._entities_manager.add_component(self._player, 'Interactions', can_do=['attack'])
 
         self._entities_manager.get_system('Messages').create_component(self, txt='You wake up in a dark lab...',
-                                                                       fg_colour='150,25,150', bg_colour='0,0,0')
+                                                                       fg_colour='150,25,150')
 
         self._entities_manager.associate_tag(self._player, 'Player')
 
@@ -54,9 +54,10 @@ class Engine:
 
     def init_terminal(self):
         terminal.open()
-        terminal.set("window.size=64x20, font: res/fonts/VeraMono.ttf, size=10x20")
+        param = f'window.size={CONSOLE_SIZE_X}x{CONSOLE_SIZE_Y}, font: res/fonts/VeraMono.ttf, size=10x20'
+        terminal.set(param)
         terminal.set("window.title='SimplyRL'")
-        terminal.set("font: res/fonts/VeraMono.ttf, size=20x40")
+        terminal.set("font: res/fonts/VeraMono.ttf, size=10x20")
         terminal.composition(True)
         terminal.refresh()
 
