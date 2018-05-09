@@ -1,11 +1,17 @@
-import random as rn
+"""
+    Python roguelike, made with BearLibTerminal, TDL and an ECS logic.
+"""
 
-from engine import *
+from engine import (Engine, terminal)
 
 def main():
+    """
+        The main loop of the program. Instanciates an Engine and loops
+        until a quit signal is sent.
+    """
     engine = Engine()
 
-    while engine.game_state is not 'exit':
+    while engine.game_state != 'exit':
         engine.update()
         terminal.refresh()
 
