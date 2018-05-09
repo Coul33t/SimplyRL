@@ -1,6 +1,7 @@
 from tile import *
-from tools import rnd_color
-from tools import Rect
+from tools import (Rect,
+                   rnd_color,
+                   distance)
 
 import random as rn
 import math
@@ -8,10 +9,11 @@ import math
 MAP_TILES = {'wall': ' ', 'floor': ' '}
 COLORS = {'wall': '50,50,50', 'floor': '225,225,225'}
 
-MIN_ROOM = 2
-MAX_ROOM = 10
-MIN_ROOM_SIZE = 3
-MAX_ROOM_SIZE = 7
+MIN_ROOM = 5
+MAX_ROOM = 20
+MIN_ROOM_SIZE = 2
+MAX_ROOM_SIZE = 6
+MAX_DISTANCE_ROOMS = 5
 
 class GameMap:
     def __init__(self, width=40, height=20):
@@ -102,11 +104,16 @@ class GameMap:
 
                 new_room = Rect(x, y, w, h)
 
+                dst_good = False
+
                 if self.rooms:
                     for other_room in self.rooms:
                         if new_room.intersect(other_room):
                             carved = False
-                else:
+                        if distance(new_room.get_center(), other_room.get_center()) <= MAX_DISTANCE_ROOMS:
+                            dst_good = True
+
+                elif dst_good:
                     carved = True
 
             self.create_room(new_room)
@@ -118,11 +125,11 @@ class GameMap:
 
             else:
                 closest_room = [-1, -1]
-                for i, other_room in enumerate(self.rooms):
+                for other_room in self.rooms:
                     if closest_room == [-1, -1]:
                         closest_room = list(other_room.get_center())
                     else:
-                        if math.sqrt(pow(other_room.x1 - x, 2) + pow(other_room.y1 - y, 2)) < math.sqrt(pow(closest_room[0] - x, 2) + pow(closest_room[1] - y, 2)):
+                        if distance((new_x, new_y), other_room.get_center()) < distance((new_x, new_y), closest_room):
                             closest_room = list(other_room.get_center())
 
                 if rn.random() > 0.5:
