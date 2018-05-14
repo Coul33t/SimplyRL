@@ -41,7 +41,7 @@ class Engine:
 
         self._entities_manager.add_component(self._player, 'Physics', x=x_player, y=y_player, blocks_sight=False)
         self._entities_manager.add_component(self._player, 'Graphics', ch='@', name='You', fg='red', bg=None)
-        self._entities_manager.add_component(self._player, 'Stats', melee_dmg=10)
+        self._entities_manager.add_component(self._player, 'Stats', hp=10, melee_dmg=10)
         self._entities_manager.add_component(self._player, 'Interactions', can_do=['attack'])
 
         self._entities_manager.get_system('Messages').create_component(self, txt='You wake up in a dark lab...',
