@@ -13,7 +13,7 @@ MIN_ROOM = 5
 MAX_ROOM = 20
 MIN_ROOM_SIZE = 2
 MAX_ROOM_SIZE = 6
-MAX_DISTANCE_ROOMS = 5
+MAX_DISTANCE_ROOMS = 10
 
 class GameMap:
     def __init__(self, width=40, height=20):
@@ -95,8 +95,6 @@ class GameMap:
 
             while not carved:
 
-                carved = True
-
                 w = rn.randint(min_room_size, max_room_size)
                 h = rn.randint(min_room_size, max_room_size)
                 x = rn.randint(1, self.width - w - 1)
@@ -104,16 +102,15 @@ class GameMap:
 
                 new_room = Rect(x, y, w, h)
 
-                dst_good = False
 
                 if self.rooms:
                     for other_room in self.rooms:
-                        if new_room.intersect(other_room):
-                            carved = False
-                        if distance(new_room.get_center(), other_room.get_center()) <= MAX_DISTANCE_ROOMS:
-                            dst_good = True
+                        if not new_room.intersect(other_room):
+                            if distance(new_room.get_center(), other_room.get_center()) <= MAX_DISTANCE_ROOMS:
+                                carved = True
+                                break
 
-                elif dst_good:
+                else:
                     carved = True
 
             self.create_room(new_room)
