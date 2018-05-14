@@ -1,13 +1,21 @@
 from components.graphics import Graphics
 from systems.sys_template import *
 
+import math
+
 from constants import (MESSAGE_SIZE_X,
                        MESSAGE_SIZE_Y,
-                       CONSOLE_SIZE_Y)
+                       CONSOLE_SIZE_X,
+                       CONSOLE_SIZE_Y,
+                       STATS_PANEL_X,
+                       STATS_PANEL_Y,
+                       DUNGEON_DISPLAY_WIDTH,
+                       DUNGEON_DISPLAY_HEIGHT)
 import pdb
 
 DEFAULT_MSG_BG_COLOUR = '0,0,0'
 DEFAULT_MSG_FG_COLOUR = '255,255,255'
+HP_COLOURS = {'good': ['75,255,75', '20,80,20'], 'med': ['255,100,0', '15,50,0'], 'bad': ['255,0,0', '150,0,0']}
 
 class SysRender(SysTemplate):
     def __init__(self, terminal):
@@ -114,4 +122,26 @@ class SysRender(SysTemplate):
 
                 self._terminal.print(0, y, f'{msg.txt}')
                 y -= 1
+
+        # Player stats drawing
+        hp_colours = HP_COLOURS['good']
+        player = self.entity_manager.get_system('Stats').get_component(self.entity_manager.get_entity_by_tag('Player'))
+        if player.hp < player.max_hp/2:
+            hp_colours = HP_COLOURS['med']
+        if player.hp < player.max_hp/4:
+            hp_colours = HP_COLOURS['bad']
+
+        bar_total_width = STATS_PANEL_X - 2
+        bar_value_width = math.ceil(float(player.hp) / player.max_hp * bar_total_width)
+
+        y = 3
+
+        for x in range(DUNGEON_DISPLAY_WIDTH + 1, CONSOLE_SIZE_X - 1):
+            if (x - DUNGEON_DISPLAY_WIDTH - 1) <= bar_value_width:
+                self._terminal.bkcolor(hp_colours[0])
+                self._terminal.print(x, y, ' ')
+            else:
+                self._terminal.bkcolor(hp_colours[1])
+                self._terminal.print(x, y, ' ')
+
 
