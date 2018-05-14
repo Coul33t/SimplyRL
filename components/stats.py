@@ -3,8 +3,11 @@ class Stats(object):
 				 melee_dmg=0, ranged_dmg=0, level=1, xp=0,
 				 xp_given=0, is_dead=False, vision_range=5):
 
+		self.max_hp = hp
 		self.hp = hp
+		self.max_stamina = stamina
 		self.stamina = stamina
+		self.max_mana = mana
 		self.mana = mana
 		self.defense = defense
 		self.melee_dmg = melee_dmg
