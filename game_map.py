@@ -6,10 +6,9 @@ from tools import (Rect,
 import random as rn
 import math
 
-MAP_TILES = {'wall': ' ', 'floor': ' '}
-COLORS = {'wall': '50,50,50', 'floor': '225,225,225'}
+COLOURS = {'wall': '50,50,50', 'floor': '225,225,225'}
 
-MIN_ROOM = 5
+MIN_ROOM = 10
 MAX_ROOM = 20
 MIN_ROOM_SIZE = 2
 MAX_ROOM_SIZE = 6
@@ -19,7 +18,7 @@ class GameMap:
     def __init__(self, width=40, height=20):
         self.width = width
         self.height = height
-        self.map_array = [[Tile(ch=MAP_TILES['wall'], fg=None, bg=COLORS['wall']) for x in range(height)] for y in range(width)]
+        self.map_array = [[Tile(ch='#', fg=None, bg=COLOURS['wall']) for x in range(height)] for y in range(width)]
         self.rooms = []
 
 
@@ -54,28 +53,28 @@ class GameMap:
 
 
     def clear_map(self):
-        self.map_array = [[Tile(ch=MAP_TILES['wall'], fg=None, bg=COLORS['wall']) for x in range(0,self.height)] for y in range(0,self.width)]
+        self.map_array = [[Tile(ch='#', fg=None, bg=COLOURS['wall']) for x in range(0,self.height)] for y in range(0,self.width)]
 
 
     def create_room(self, room):
         for x in range(room.x1, room.x2):
             for y in range(room.y1, room.y2):
-                self.map_array[x][y].ch = MAP_TILES['floor']
-                self.map_array[x][y].bg = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
+                self.map_array[x][y].ch = '.'
+                self.map_array[x][y].bg = rnd_color(COLOURS['floor'],[0.05,0.05,0.05], same=True)
                 self.map_array[x][y].blocked = False
                 self.map_array[x][y].block_sight = False
 
     def carve_h_tunnel(self, x1, x2, y):
         for x in range(min(x1, x2), max(x1, x2) + 1):
-            self.map_array[x][y].ch = MAP_TILES['floor']
-            self.map_array[x][y].bg = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
+            self.map_array[x][y].ch = '.'
+            self.map_array[x][y].bg = rnd_color(COLOURS['floor'],[0.05,0.05,0.05], same=True)
             self.map_array[x][y].blocked = False
             self.map_array[x][y].block_sight = False
 
     def carve_v_tunnel(self, y1, y2, x):
         for y in range(min(y1, y2), max(y1, y2) + 1):
-            self.map_array[x][y].ch = MAP_TILES['floor']
-            self.map_array[x][y].bg = rnd_color(COLORS['floor'],[0.05,0.05,0.05], same=True)
+            self.map_array[x][y].ch = '.'
+            self.map_array[x][y].bg = rnd_color(COLOURS['floor'],[0.05,0.05,0.05], same=True)
             self.map_array[x][y].blocked = False
             self.map_array[x][y].block_sight = False
 

@@ -15,12 +15,17 @@ import pdb
 
 DEFAULT_MSG_BG_COLOUR = '0,0,0'
 DEFAULT_MSG_FG_COLOUR = '255,255,255'
+
+MAP_TILES = {'wall': ' ', 'floor': ' '}
+MAP_TILES_ASCII = {'wall': '#', 'floor': '.'}
+
 HP_COLOURS = {'good': ['75,255,75', '20,80,20'], 'med': ['255,100,0', '15,50,0'], 'bad': ['255,0,0', '150,0,0']}
 
 class SysRender(SysTemplate):
     def __init__(self, terminal):
         super().__init__()
         self._terminal = terminal
+        self.display_type = 1
 
     def create_component(self, entity, **params):
         self.component_list[entity] = Graphics(**params)
@@ -59,14 +64,27 @@ class SysRender(SysTemplate):
 
                 if (x, y) in self.entity_manager.get_system('Map').visible_tiles:
                     game_map.map_array[x][y].explored = True
-                    self._terminal.color(game_map.map_array[x][y].fg)
-                    self._terminal.bkcolor(game_map.map_array[x][y].bg)
-                    self._terminal.puts(x, y, game_map.map_array[x][y].ch)
+                    # NO ASCII
+                    if self.display_type == 1:
+                        self._terminal.color(game_map.map_array[x][y].fg)
+                        self._terminal.bkcolor(game_map.map_array[x][y].bg)
+                        self._terminal.puts(x, y, ' ')
+                    else:
+                        self._terminal.color(game_map.map_array[x][y].bg)
+                        self._terminal.bkcolor('0,0,0')
+                        self._terminal.puts(x, y, game_map.map_array[x][y].ch)
 
                 elif game_map.map_array[x][y].explored:
-                    self._terminal.color(self._attenuate_color(game_map.map_array[x][y].fg, 0.25))
-                    self._terminal.bkcolor(self._attenuate_color(game_map.map_array[x][y].bg, 0.25))
-                    self._terminal.puts(x, y, game_map.map_array[x][y].ch)
+                    # NO ASCII
+                    if self.display_type == 1:
+                        self._terminal.color(self._attenuate_color(game_map.map_array[x][y].fg, 0.25))
+                        self._terminal.bkcolor(self._attenuate_color(game_map.map_array[x][y].bg, 0.25))
+                        self._terminal.puts(x, y, ' ')
+                    else:
+                        self._terminal.color(self._attenuate_color(game_map.map_array[x][y].bg, 0.25))
+                        self._terminal.bkcolor('0,0,0')
+                        self._terminal.puts(x, y, game_map.map_array[x][y].ch)
+
 
         # Entities drawing
         self._terminal.layer(1)

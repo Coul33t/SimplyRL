@@ -20,3 +20,8 @@ class SysInput(SysTemplate):
         if key in MOVEMENT_KEYS:
             self.entity_manager.get_system('Event').add_event(('Physics', 'move', self.entity_manager.get_entity_by_tag('Player'), MOVEMENT_KEYS[key]))
         #self._terminal.puts(10,10, '[color=orange]{}[/color]'.format(key))
+
+        # 'a'
+        if key == 4:
+            self.entity_manager.get_system('Graphics').display_type = abs(self.entity_manager.get_system('Graphics').display_type - 1)
+            self.entity_manager.get_system('Graphics').update()
