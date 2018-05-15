@@ -7,3 +7,10 @@ class SysAi(SysTemplate):
 
     def create_component(self, entity, **params):
         self.component_list[entity] = Ai(**params)
+
+    def basic(self):
+        pass
+
+    def update(self):
+        pass
+
