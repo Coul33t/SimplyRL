@@ -1,4 +1,4 @@
-import tdl
+import tcod
 
 import random as rn
 
@@ -7,8 +7,6 @@ from game_map import *
 
 from constants import (DUNGEON_DISPLAY_WIDTH,
                        DUNGEON_DISPLAY_HEIGHT)
-
-import pdb
 
 FOV_ALGO = 0
 FOV_LIGHT_WALLS = True
@@ -20,10 +18,10 @@ class SysMap(SysTemplate):
         super().__init__()
 
         self.game_map = GameMap(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
-        self._fov_map = tdl.map.Map(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
+        self._fov_map = tcod.map.Map(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
         self._fov_recompute = True
 
-        self._a_star = tdl.map.AStar(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT, self.move_cost, diagnalCost=1)
+        self._a_star = tcod.path.AStar(self._fov_map)
 
         self._current_map_level = 1
         self.visible_tiles = []
@@ -37,7 +35,7 @@ class SysMap(SysTemplate):
     def init_fov(self):
         self._fov_recompute = True
 
-        for x, y in self._fov_map:
+        for x, y in zip(range(self._fov_map.width), range(self._fov_map.height)):
             self._fov_map.transparent[x, y] = not self.game_map.map_array[x][y].block_sight
             self._fov_map.walkable[x, y] = not self.game_map.map_array[x][y].blocked
 
