@@ -1,6 +1,7 @@
 import tcod
 
 import random as rn
+import numpy as np
 
 from systems.sys_template import *
 from game_map import *
@@ -97,11 +98,9 @@ class SysMap(SysTemplate):
         p_phys = self.entity_manager.get_system('Physics').get_component(self.entity_manager.get_entity_by_tag('Player'))
         p_vis = self.entity_manager.get_system('Stats').get_component(self.entity_manager.get_entity_by_tag('Player')).vision_range
 
-        visible_tiles_iter = self._fov_map.compute_fov(p_phys.x, p_phys.y, radius=p_vis, light_walls=FOV_LIGHT_WALLS)
-
-        for tile in visible_tiles_iter:
-            self.visible_tiles.append(tile)
-
+        self._fov_map.compute_fov(p_phys.x, p_phys.y, radius=p_vis, light_walls=FOV_LIGHT_WALLS)
+        self.visible_tiles = np.ndarray.tolist(np.array(np.where(self._fov_map.fov==True)).T)
+        
 
     def update(self):
         self.compute_visible_tiles()
