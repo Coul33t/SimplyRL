@@ -100,6 +100,9 @@ class SysMap(SysTemplate):
 
         self._fov_map.compute_fov(p_phys.x, p_phys.y, radius=p_vis, light_walls=FOV_LIGHT_WALLS)
         self.visible_tiles = np.ndarray.tolist(np.array(np.where(self._fov_map.fov==True)).T)
+
+        for coord in self.visible_tiles:
+            coord.reverse()
         
 
     def update(self):

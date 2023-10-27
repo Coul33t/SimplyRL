@@ -58,11 +58,12 @@ class SysRender(SysTemplate):
         self._terminal.layer(0)
 
         game_map = self.entity_manager.get_system('Map').game_map
+        visible_tiles = self.entity_manager.get_system('Map').visible_tiles
 
         for x in range(0, game_map.width):
             for y in range(0, game_map.height):
 
-                if (x, y) in self.entity_manager.get_system('Map').visible_tiles:
+                if [x, y] in visible_tiles:
                     game_map.map_array[x][y].explored = True
                     # NO ASCII
                     if self.display_type == 1:
@@ -93,7 +94,7 @@ class SysRender(SysTemplate):
         for elem in self.component_list:
             e = self.entity_manager.get_system('Physics').get_component(elem)
 
-            if (e.x, e.y) in self.entity_manager.get_system('Map').visible_tiles:
+            if (e.x, e.y) in visible_tiles:
                 self.component_list[elem].last_seen = [e.x, e.y]
 
                 if self.component_list[elem].fg:
