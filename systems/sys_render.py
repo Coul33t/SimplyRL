@@ -94,7 +94,7 @@ class SysRender(SysTemplate):
         for elem in self.component_list:
             e = self.entity_manager.get_system('Physics').get_component(elem)
 
-            if (e.x, e.y) in visible_tiles:
+            if [e.x, e.y] in visible_tiles:
                 self.component_list[elem].last_seen = [e.x, e.y]
 
                 if self.component_list[elem].fg:
