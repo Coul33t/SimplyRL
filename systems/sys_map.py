@@ -19,7 +19,7 @@ class SysMap(SysTemplate):
         super().__init__()
 
         self.game_map = GameMap(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
-        self._fov_map = tcod.map.Map(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT)
+        self._fov_map = tcod.map.Map(DUNGEON_DISPLAY_WIDTH, DUNGEON_DISPLAY_HEIGHT, 'F')
         self._fov_recompute = True
 
         self._a_star = tcod.path.AStar(self._fov_map)
@@ -36,9 +36,10 @@ class SysMap(SysTemplate):
     def init_fov(self):
         self._fov_recompute = True
 
-        for x, y in zip(range(self._fov_map.width), range(self._fov_map.height)):
-            self._fov_map.transparent[x, y] = not self.game_map.map_array[x][y].block_sight
-            self._fov_map.walkable[x, y] = not self.game_map.map_array[x][y].blocked
+        for x in range(self._fov_map.width):
+            for y in range(self._fov_map.height):
+                self._fov_map.transparent[x, y] = not self.game_map.map_array[x][y].block_sight
+                self._fov_map.walkable[x, y] = not self.game_map.map_array[x][y].blocked
 
 
     def create_monster(self, x, y, ch='X', fg='green', bg=None):
